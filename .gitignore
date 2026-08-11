@@ -1,0 +1,17 @@
+cmake-build-*/
+.cmake/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+*.exe
+*.dll
+*.so
+*.dylib
+*.out
+*.app
+
+.idea/
+*.iws
+*.iml
