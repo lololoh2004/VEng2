@@ -1,9 +1,7 @@
 #include "main_core.hpp"
 
 #include "lo_utils.h"
-extern "C" {
-#include "mswlua.h"
-}
+#include "mswlua.hpp"
 
 Engine::~Engine(){
     shutdownAll();
@@ -14,12 +12,10 @@ bool Engine::initAll(){
     termMsg("Enter engine init..\n", "ENG");
 
     termMsg("Enter Lua init..\n", "ENG");
-    lua_State* sv = nullptr;
-    lua_State* cl = nullptr;
-    initLuaStates(&sv, &cl);
-    if (sv && cl){
+    luaState sv;   luaState cl;
+    sv.openLibs(); cl.openLibs();
+    if (sv.getRawState() && cl.getRawState())
         termMsg("Success !!\n", "ENG");
-    }
     return true;
 }
 
