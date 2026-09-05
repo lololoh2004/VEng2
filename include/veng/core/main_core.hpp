@@ -1,10 +1,11 @@
 #pragma once
+#include <memory>
 
-struct lua_State;
+class RLibRender;
 
 class Engine{
 public:
-    Engine() = default;
+    Engine();
     ~Engine();
 
     Engine(const Engine &) = delete;
@@ -14,6 +15,6 @@ public:
     void startUpdating();
     void shutdownAll();
 private:
-    lua_State* m_svState;
-    lua_State* m_clState;
+    std::unique_ptr<RLibRender> m_render;
+
 };

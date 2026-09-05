@@ -30,12 +30,18 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(MSWLua)
 
 
-# === Angle Lib ===
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib/angleInclude")
+# === PhysFS Lib ===
+FetchContent_Declare(
+        physfs
+        GIT_REPOSITORY "https://github.com/icculus/physfs.git"
+        GIT_TAG        main
+        SOURCE_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/lib/physfs"
+)
+FetchContent_MakeAvailable(physfs)
 
 
 # === RayLib Lib ( MAIN ) ===
-set(GRAPHICS "GRAPHICS_API_OPENGL_ES3" CACHE STRING "Graphics API to use" FORCE)
+#set(GRAPHICS "GRAPHICS_API_OPENGL_ES3" CACHE STRING "Graphics API to use" FORCE)
 FetchContent_Declare(
         raylib
         GIT_REPOSITORY "https://github.com/raysan5/raylib.git"
@@ -82,12 +88,19 @@ add_executable(VEng2
         resources/.build_res/resources.rc
         src/main.cpp
         src/core/main_core.cpp
-        src/core/main_core.hpp
-        src/render/raylib_backnd/render_class.h
-        src/render/raylib_backnd/base.cpp)
+        include/veng/core/main_core.hpp
+        include/veng/render/raylib_backnd/render_class.hpp
+        src/render/raylib_backnd/base.cpp
+        include/veng/defines.h
+        src/render/raylib_backnd/draw.cpp)
+target_include_directories(VEng2 PUBLIC
+        src/
+        include/
+)
 target_link_libraries(VEng2 PRIVATE
         LolohUtils
         MSWLua_lib
+        physfs-static
         rlimgui
         raylib
 )
