@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>
 
-class RLibRender;
+class entityManager;
+class rLibRender;
 
 class Engine{
 public:
@@ -13,8 +14,11 @@ public:
 
     bool initAll();
     void startUpdating();
+    void renderFrame();
     void shutdownAll();
-private:
-    std::unique_ptr<RLibRender> m_render;
 
+    void DEBUG_FUNC();
+private:
+    std::unique_ptr<rLibRender> m_render;
+    std::unique_ptr<entityManager> m_entManager;
 };

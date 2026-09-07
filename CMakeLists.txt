@@ -91,8 +91,9 @@ add_executable(VEng2
         include/veng/core/main_core.hpp
         include/veng/render/raylib_backnd/render_class.hpp
         src/render/raylib_backnd/base.cpp
-        include/veng/defines.h
-        src/render/raylib_backnd/draw.cpp)
+        src/render/raylib_backnd/draw.cpp
+        src/scene/ent_manager.cpp
+        include/veng/scene/ent_manager.hpp)
 target_include_directories(VEng2 PUBLIC
         src/
         include/

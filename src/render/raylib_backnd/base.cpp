@@ -1,15 +1,16 @@
 #include "veng/render/raylib_backnd/render_class.hpp"
 #include "raylib.h"
-#include "veng/defines.h"
+#include "lo_utils/common/defines.h"
 
 
-RLibRender::RLibRender() = default;
+rLibRender::rLibRender() = default;
 
-RLibRender::~RLibRender(){
+rLibRender::~rLibRender(){
     shutdown();
 }
 
-bool RLibRender::init(){
+bool rLibRender::internalInit(){
+    SetTraceLogLevel(LOG_ERROR);
     InitWindow(m_windowWidth, m_windowHeight, m_windowTitle);
     if (!IsWindowReady())
         return RETURN_FAILURE;
@@ -20,13 +21,22 @@ bool RLibRender::init(){
     return RETURN_SUCCESS;
 }
 
-void RLibRender::shutdown(){
+bool rLibRender::init(int windowWidth, int windowHeight, const char* windowTitle,int fps){
+    m_windowWidth = windowWidth;
+    m_windowHeight = windowHeight;
+    m_windowTitle = windowTitle;
+    m_fps = fps;
+
+    return internalInit();
+}
+
+void rLibRender::shutdown(){
     if (m_isInitialized){
         CloseWindow();
         m_isInitialized = false;
     }
 }
 
-bool RLibRender::windowShouldClose(){
+bool rLibRender::windowShouldClose(){
     return WindowShouldClose();
 }
