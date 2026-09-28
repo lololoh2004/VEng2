@@ -1,7 +1,11 @@
 #include "veng/core/main_core.hpp"
 
-#include "lo_utils.h"
-#include "mswlua.hpp"
+extern "C"{
+#include <lo_utils/c11/term.h>
+}
+#include <lo_utils/cxx_wrap/term.hpp>
+#include <mswlua/luaState/state.hpp>
+
 #include "veng/render/raylib_backnd/render_class.hpp"
 #include "veng/scene/ent_manager.hpp"
 
@@ -13,29 +17,32 @@ Engine::~Engine(){
 }
 
 void Engine::DEBUG_FUNC(){
-    termMsg(m_entManager->getEntCount());
+    term::msg(m_entManager->getEntCount());
     for (int i = 0; i < 10; i++){
         entity ent(1, 1, 1);
         m_entManager->addEnt(ent);
     }
-    termMsg(m_entManager->getEntCount());
+    term::msg(m_entManager->getEntCount());
 }
 
 bool Engine::initAll(){
     termSetupEnv();
-    termMsg("Enter engine init..", "ENG");
+    term::msg("Enter engine init..", "ENG");
 
     // === LUA INIT ===
-    termMsg("Enter Lua init..", "ENG");
+    term::msg("Enter Lua init..", "ENG");
     luaState sv;   luaState cl;
     sv.openLibs(); cl.openLibs();
     if (sv.getRawState() && cl.getRawState())
-        termMsg("Success !!", "ENG");
+        term::msg("Success !!", "ENG");
+
     // === RENDER INIT ===
     m_render = std::make_unique<rLibRender>();
-    m_render->init(1600,480,"ENGINE_DEBUG_WINDOW", 90);
+    m_render->init(600,480,"ENGINE_DEBUG_WINDOW", 90);
+
     // === SCENE INIT ===
     m_entManager = std::make_unique<entityManager>();
+
     // === DEBUG TESTS ===
     DEBUG_FUNC();
 

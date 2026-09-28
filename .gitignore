@@ -1,14 +1,7 @@
 cmake-build-*/
 CMakeCache.txt
 
-bin/win_x64/*.dll
-
-lib/imgui
-lib/LoUtils
-lib/MSWLua
-lib/raylib
-lib/rlImGui
-lib/physfs
+bin/*
 
 *.exe
 *.dll
