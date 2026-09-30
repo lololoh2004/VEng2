@@ -10,6 +10,8 @@ bin/*
 *.out
 *.app
 
+*.a
+
 .idea/
 *.iws
 *.iml

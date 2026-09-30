@@ -1,7 +1,7 @@
 #include "veng/core/main_core.hpp"
 
-extern "C"{
-#include <lo_utils/c11/term.h>
+extern "C" {
+#include <lo_utils/c11/term/term_sys_wrap.h>
 }
 #include <lo_utils/cxx_wrap/term.hpp>
 #include <mswlua/luaState/state.hpp>
@@ -10,11 +10,10 @@ extern "C"{
 #include "veng/scene/ent_manager.hpp"
 
 
-Engine::Engine() = default;
-
 Engine::~Engine(){
     shutdownAll();
 }
+Engine::Engine() = default;
 
 void Engine::DEBUG_FUNC(){
     term::msg(m_entManager->getEntCount());
@@ -25,25 +24,27 @@ void Engine::DEBUG_FUNC(){
     term::msg(m_entManager->getEntCount());
 }
 
+
 bool Engine::initAll(){
+    // Small setup
     termSetupEnv();
     term::msg("Enter engine init..", "ENG");
 
-    // === LUA INIT ===
+    // Lua init
     term::msg("Enter Lua init..", "ENG");
     luaState sv;   luaState cl;
     sv.openLibs(); cl.openLibs();
     if (sv.getRawState() && cl.getRawState())
         term::msg("Success !!", "ENG");
 
-    // === RENDER INIT ===
+    // Render init
     m_render = std::make_unique<rLibRender>();
     m_render->init(600,480,"ENGINE_DEBUG_WINDOW", 90);
 
-    // === SCENE INIT ===
+    // Scene sys. init
     m_entManager = std::make_unique<entityManager>();
 
-    // === DEBUG TESTS ===
+    // DEBUG TESTS
     DEBUG_FUNC();
 
     return true;
