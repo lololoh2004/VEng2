@@ -3,6 +3,7 @@
 
 class entityManager;
 class rLibRender;
+class luaState;
 
 class Engine{
 public:
@@ -17,8 +18,10 @@ public:
     void renderFrame();
     void shutdownAll();
 
-    void DEBUG_FUNC();
+    void DEBUG_FUNC1();
 private:
-    std::unique_ptr<rLibRender> m_render;
+    std::unique_ptr<rLibRender>    m_render;
     std::unique_ptr<entityManager> m_entManager;
+
+    // void luaInit(luaState& sv, luaState& cl);
 };

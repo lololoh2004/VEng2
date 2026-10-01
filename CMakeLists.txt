@@ -54,7 +54,10 @@ add_executable(VEng2
         src/render/raylib_backnd/base.cpp
         src/render/raylib_backnd/draw.cpp
         src/scene/ent_manager.cpp
-        include/veng/scene/ent_manager.hpp)
+        include/veng/scene/ent_manager.hpp
+        src/core/debug_func.cpp
+        src/lua/get_bind_code.cpp
+        include/veng/lua/get_bind_code.hpp)
 target_include_directories(VEng2 PUBLIC
         include
         lib/LoUtils/include

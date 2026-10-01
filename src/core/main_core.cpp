@@ -1,5 +1,7 @@
 #include "veng/core/main_core.hpp"
 
+#include "veng/lua/get_bind_code.hpp"
+
 extern "C" {
 #include <lo_utils/c11/term/term_sys_wrap.h>
 }
@@ -15,13 +17,31 @@ Engine::~Engine(){
 }
 Engine::Engine() = default;
 
-void Engine::DEBUG_FUNC(){
-    term::msg(m_entManager->getEntCount());
-    for (int i = 0; i < 10; i++){
-        entity ent(1, 1, 1);
-        m_entManager->addEnt(ent);
+void luaInitFirstPart(luaState& state){
+    term::msg("Enter Lua first-api init..", "ENG");
+
+    if (state.getRawState()){
+        term::msg(" - Success !!", "ENG");
+    } else {
+        term::msg(" - Fail !!", "ENG");
     }
-    term::msg(m_entManager->getEntCount());
+}
+void luaInitFinalPart(luaState& state){
+    term::msg("Enter Lua final-api init..", "ENG");
+
+    term::msg(" - Opening libs..", "ENG");
+    state.openLibs();
+    term::msg(" - Creating c code bind..", "ENG");
+    std::string apiCode = getCBind();
+    term::msg(" - Bind result :", "ENG");
+    printf("%s", apiCode.c_str());
+
+    term::msg(" - Exec. bind..", "ENG");
+    if (state.doScriptStr(apiCode)){
+        term::msg(" - Success !!", "ENG");
+    } else {
+        term::msg(" - Fail !!", "ENG");
+    }
 }
 
 
@@ -31,11 +51,9 @@ bool Engine::initAll(){
     term::msg("Enter engine init..", "ENG");
 
     // Lua init
-    term::msg("Enter Lua init..", "ENG");
-    luaState sv;   luaState cl;
-    sv.openLibs(); cl.openLibs();
-    if (sv.getRawState() && cl.getRawState())
-        term::msg("Success !!", "ENG");
+    luaState state;
+    luaInitFirstPart(state);
+    luaInitFinalPart(state);
 
     // Render init
     m_render = std::make_unique<rLibRender>();
@@ -43,9 +61,6 @@ bool Engine::initAll(){
 
     // Scene sys. init
     m_entManager = std::make_unique<entityManager>();
-
-    // DEBUG TESTS
-    DEBUG_FUNC();
 
     return true;
 }
