@@ -1,8 +1,9 @@
 #pragma once
 #include <memory>
 
-class entityManager;
 class rLibRender;
+class entityManager;
+class VFileSys;
 class luaState;
 
 class Engine{
@@ -13,7 +14,7 @@ public:
     Engine(const Engine &) = delete;
     Engine& operator=(const Engine &) = delete;
 
-    bool initAll();
+    bool initAll(int argc, char *argv[]);
     void startUpdating();
     void renderFrame();
     void shutdownAll();
@@ -22,6 +23,7 @@ public:
 private:
     std::unique_ptr<rLibRender>    m_render;
     std::unique_ptr<entityManager> m_entManager;
+    std::unique_ptr<VFileSys>      m_vFileSys;
 
     // void luaInit(luaState& sv, luaState& cl);
 };

@@ -1,5 +1,6 @@
 cmake-build-*/
 CMakeCache.txt
+user_build/
 
 bin/*
 

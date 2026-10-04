@@ -42,6 +42,25 @@ set_target_properties(raylib PROPERTIES
         PREFIX ""
 )
 
+# === PhysFS ===
+set(PHYSFS_ARCHIVE_7Z      OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_GRP     OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_HOG     OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_MVL     OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_QPAK    OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_WAD     OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_SLB     OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_ISO9660 OFF CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_VDF     OFF CACHE BOOL "" FORCE)
+
+set(PHYSFS_ARCHIVE_ZIP     ON  CACHE BOOL "" FORCE)
+set(PHYSFS_ARCHIVE_TAR     ON  CACHE BOOL "" FORCE)
+
+set(PHYSFS_BUILD_TEST      OFF CACHE BOOL "" FORCE)
+set(PHYSFS_BUILD_SHARED    OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(lib/physfs)
+
 
 # === V Engine Executable ===
 add_executable(VEng2
@@ -57,7 +76,9 @@ add_executable(VEng2
         include/veng/scene/ent_manager.hpp
         src/core/debug_func.cpp
         src/lua/get_bind_code.cpp
-        include/veng/lua/get_bind_code.hpp)
+        include/veng/lua/get_bind_code.hpp
+        include/veng/virtual_file_sys/vfs_class.h
+        src/virtual_file_sys/base.cpp)
 target_include_directories(VEng2 PUBLIC
         include
         lib/LoUtils/include
@@ -69,13 +90,16 @@ target_link_libraries(VEng2 PRIVATE
         LolohUtilsPack_cxx
         MSWLua_lib
         raylib
+        physfs-static
 )
 
 
 # PLACEHOLDER CMDS.
-add_custom_command(TARGET VEng2 POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:raylib>
-        "${CMAKE_CURRENT_SOURCE_DIR}/lib/MSWLua/lib/luajit2/win64/lua51.dll"
-        "$<TARGET_FILE_DIR:VEng2>"
-)
+if(WIN32)
+    add_custom_command(TARGET VEng2 POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:raylib>
+            "${CMAKE_CURRENT_SOURCE_DIR}/lib/MSWLua/lib/luajit2/win64/lua51.dll"
+            "$<TARGET_FILE_DIR:VEng2>"
+    )
+endif()

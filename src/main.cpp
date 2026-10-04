@@ -1,10 +1,10 @@
 #include "veng/core/main_core.hpp"
 
-int main(){
+int main(int argc, char *argv[]){
     Engine mainEng = Engine();
-    mainEng.initAll();
+    mainEng.initAll(argc, argv);
     mainEng.startUpdating();
-    mainEng.shutdownAll();
+
 
     return 0;
 }
