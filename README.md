@@ -1,4 +1,4 @@
-<img src="resources/.build_res/veng256.png" alt="OldEngineIcon" width="150">
+<img src="resources/.build_res/veng256_new.png" alt="OldEngineIcon" width="150">
 
 
 [![badge](https://shieldcn.dev/badge/language-C++.svg?variant=outline&size=xs&logo=cplusplus&split=true)](https://github.com/topics/cpp)
