@@ -4,6 +4,7 @@ user_build/
 
 bin/*
 
+VEng2
 *.exe
 *.dll
 *.so

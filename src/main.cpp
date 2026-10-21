@@ -1,7 +1,7 @@
 #include "veng/core/main_core.hpp"
 
 int main(int argc, char *argv[]){
-    Engine mainEng = Engine();
+    vEngine mainEng = vEngine();
     mainEng.initAll(argc, argv);
     mainEng.startUpdating();
 
