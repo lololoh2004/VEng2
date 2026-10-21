@@ -2,7 +2,7 @@ cmake-build-*/
 CMakeCache.txt
 user_build/
 
-bin/*
+lib/
 
 VEng2
 *.exe
@@ -11,9 +11,11 @@ VEng2
 *.dylib
 *.out
 *.app
+*.lib
 
 *.a
 
 .idea/
 *.iws
 *.iml
+
