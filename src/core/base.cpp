@@ -1,9 +1,12 @@
 #include "veng/core/main_core.hpp"
-#include "veng/virtual_file_sys/vfs_class.h"
+
 #include <lo_utils/cxx_wrap/term.hpp>
 
-#include "veng/cfg/arg_parser.hpp"
+#include "veng/virtual_file_sys/vfs_class.h"
+#include "veng/render/rsdl_backnd/r_class.hpp"
 #include "veng/scene/ent_manager.hpp"
+
+#include "veng/cfg/arg_parser.hpp"
 
 
 vEngine::~vEngine(){
@@ -11,6 +14,11 @@ vEngine::~vEngine(){
 }
 vEngine::vEngine() = default;
 
+
+bool vEngine::initRender(){
+    m_render = std::make_unique<rSDLRender>();
+    return m_render ->init();
+}
 
 bool vEngine::initAll(int argc, char *argv[]){
     // Small setup
@@ -32,7 +40,7 @@ bool vEngine::initAll(int argc, char *argv[]){
     m_vFileSys ->init(argv[0]);
 
     // Render init
-    // Naaaaaah
+    initRender();
 
     // Scene sys. init
     m_entManager = std::make_unique<entityManager>();

@@ -38,7 +38,7 @@ set_target_properties(LolohUtilsPack_cxx PROPERTIES
 )
 
 # === rSDL3 lib ===
-# add_subdirectory(lib/rsdl)
+add_subdirectory(lib/rsdl)
 
 # === MSWLua Wrapper ===
 set(NO_DL_COPY ON CACHE BOOL "" FORCE)
@@ -73,7 +73,6 @@ add_executable(VEng2
         src/main.cpp
         include/veng/core/main_core.hpp
         src/core/base.cpp
-        src/core/init_lua.cpp
         src/core/update.cpp
 
         include/veng/cfg/arg_parser.hpp
@@ -86,13 +85,16 @@ add_executable(VEng2
         src/scene/ent_manager.cpp
 
         # Render section
-        # include/veng/render/raylib_backnd/render_class.hpp
-        # src/render/raylib_backnd/base.cpp
-        # src/render/raylib_backnd/draw.cpp
 
         # Lua section
         include/veng/lua/get_bind_code.hpp
         src/lua/get_bind_code.cpp
+
+        # UNSORTED section
+        src/render/rsdl_backnd/base.cpp
+        src/render/rsdl_backnd/draw.cpp
+        include/veng/render/rsdl_backnd/r_class.hpp
+        src/core/lua_init.cpp
 
 )
 target_include_directories(VEng2 PUBLIC
@@ -103,13 +105,14 @@ target_include_directories(VEng2 PUBLIC
 target_link_libraries(VEng2 PRIVATE
         LolohUtilsPack_cxx
         MSWLua_lib
+        rsdl
         physfs-static
 )
 
 
 # Custom CMDS.
 add_custom_command(TARGET VEng2 POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E echo "Deploying all bins. from ${VENG_OS_ALIAS}_x64.."
+        COMMAND ${CMAKE_COMMAND} -E echo "Deploying all engine bins. from shred-binary repo (VengBinary).."
 
         COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
         "${BINS_SOURCE_DIR}"

@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-class rLibRender;
+class rSDLRender;
 class entityManager;
 class VFileSys;
 class luaState;
@@ -15,15 +15,16 @@ public:
     vEngine& operator=(const vEngine &) = delete;
 
     bool initAll(int argc, char *argv[]);
-    void initLua();
+    bool initLua();
+    bool initRender();
+    //
 
-    void startUpdating();
-    void renderFrame();
+    void update();
     void shutdownAll();
 
     // void DEBUG_FUNC1();
 private:
-    // std::unique_ptr<rLibRender>    m_render;
+    std::unique_ptr<rSDLRender>    m_render;
     std::unique_ptr<entityManager> m_entManager;
     std::unique_ptr<VFileSys>      m_vFileSys;
 
