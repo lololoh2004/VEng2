@@ -71,7 +71,7 @@ add_executable(VEng2
 
         # Core section
         src/main.cpp
-        include/veng/core/main_core.hpp
+        include/veng/core/engine.hpp
         src/core/base.cpp
         src/core/update.cpp
 
@@ -87,14 +87,14 @@ add_executable(VEng2
         # Render section
 
         # Lua section
-        include/veng/lua/get_bind_code.hpp
-        src/lua/get_bind_code.cpp
 
         # UNSORTED section
         src/render/rsdl_backnd/base.cpp
         src/render/rsdl_backnd/draw.cpp
-        include/veng/render/rsdl_backnd/r_class.hpp
-        src/core/lua_init.cpp
+        include/veng/render/rsdl_backnd.hpp
+        include/veng/script/lua_backnd.hpp
+        src/script/lua_backnd/apiInit_func.cpp
+        src/script/lua_backnd/base.cpp
 
 )
 target_include_directories(VEng2 PUBLIC

@@ -1,12 +1,19 @@
 #pragma once
+
 #include <memory>
+
 
 class rSDLRender;
 class entityManager;
 class VFileSys;
-class luaState;
+class luaScriptSys;
 
 class vEngine{
+    std::unique_ptr<luaScriptSys>     m_scriptSys;
+    std::unique_ptr<rSDLRender>    m_render;
+    std::unique_ptr<entityManager> m_entManager;
+    std::unique_ptr<VFileSys>      m_vFileSys;
+
 public:
     vEngine();
     ~vEngine();
@@ -15,18 +22,11 @@ public:
     vEngine& operator=(const vEngine &) = delete;
 
     bool initAll(int argc, char *argv[]);
-    bool initLua();
-    bool initRender();
-    //
+    // bool initLua();
+    // bool initRender();
 
     void update();
     void shutdownAll();
 
     // void DEBUG_FUNC1();
-private:
-    std::unique_ptr<rSDLRender>    m_render;
-    std::unique_ptr<entityManager> m_entManager;
-    std::unique_ptr<VFileSys>      m_vFileSys;
-
-    // void luaInit(luaState& sv, luaState& cl);
 };
