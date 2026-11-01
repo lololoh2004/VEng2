@@ -9,10 +9,10 @@ class VFileSys;
 class luaScriptSys;
 
 class vEngine{
-    std::unique_ptr<luaScriptSys>     m_scriptSys;
+    std::unique_ptr<VFileSys>      m_vFileSys;
+    std::unique_ptr<luaScriptSys>  m_scriptSys;
     std::unique_ptr<rSDLRender>    m_render;
     std::unique_ptr<entityManager> m_entManager;
-    std::unique_ptr<VFileSys>      m_vFileSys;
 
 public:
     vEngine();

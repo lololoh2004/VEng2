@@ -1,29 +1,40 @@
 #include "veng/scene/ent_manager.hpp"
 
-[[nodiscard]] bool entity::isCreated() const {
-    return m_isCreated;
-}
 
+entityManager::entityManager(){
+    m_activeEntsID.reserve(4096);
+    m_sleepEntsID.reserve(4096);
+
+    for (int i = MAX_ENT_COUNT - 1; i >= 0; i--){
+        m_sleepEntsID.push_back(i);
+    }
+}
 
 [[nodiscard]] int entityManager::getEntCount() const{
-    int result = 0;
-    for (const auto& ent : entArray)
-        if (ent.m_isCreated) result++;
-    return result;
+    return static_cast<int>(m_activeEntsID.size());
 }
 int entityManager::addEnt(const entity& newEnt){
-    for (int i=0; i < 4096; i++){
-        if (!entArray[i].m_isCreated){
-            entArray[i] = newEnt;
-            entArray[i].m_isCreated = true;
-            return i;
-        }
-    }
-    return -1;
+    if (m_sleepEntsID.empty()) return -1;
+
+    int freeID = m_sleepEntsID.back();
+    m_sleepEntsID.pop_back();
+
+    m_entArray[freeID] = newEnt;
+    m_entArray[freeID].revive();
+
+    m_activeEntsID.push_back(freeID);
+    return freeID;
 }
 
 void entityManager::removeEnt(int id){
-    if (id < 4096 && id >= 0){
-        entArray[id].m_isCreated = false;
+    if (id < 0 || id >= MAX_ENT_COUNT || m_entArray[id].isCreated() != true) return;
+
+    m_entArray[id].kill();
+    m_sleepEntsID.push_back(id);
+
+    auto it = std::ranges::find(m_activeEntsID, id);
+    if (it != m_activeEntsID.end()){
+        *it = m_activeEntsID.back();
+        m_activeEntsID.pop_back();
     }
 }

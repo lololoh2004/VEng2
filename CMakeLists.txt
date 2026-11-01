@@ -1,29 +1,89 @@
 cmake_minimum_required(VERSION 4.1)
 project(VEng2)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY         "${CMAKE_SOURCE_DIR}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}")
-
-# Global vars.
-set(CUSTOMIZE_BUILD   ON  CACHE BOOL "" FORCE)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(BUILD_EXAMPLES    OFF CACHE BOOL "" FORCE)
-set(BUILD_GAMES       OFF CACHE BOOL "" FORCE)
-
-if(WIN32)
-    set(BIN_OS_ALIAS "win")
-else()
-    set(BIN_OS_ALIAS "lin")
-endif()
-set(BINS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/VEngBinary/${BIN_OS_ALIAS}_x64")
+include(cmake/flags_all.cmake)
 
 
-include(FetchContent)
-# === ALL THIRDPARTY LIBS ===
+include(cmake/get_bin_files.cmake)
+include(cmake/get_lib_repo.cmake)
+
+
+# === DX Lib ( binary ) ===
+set(DX_BIN_FILES
+        "bin/x64/dxil.dll"
+        "bin/x64/dxcompiler.dll"
+
+        "lib/x64/dxil.lib"
+        "lib/x64/dxcompiler.lib"
+)
+set(DX_BUILD_VER1 "v1.9.2609")
+set(DX_BUILD_VER2 "2026_09_29")
+get_bin_files(
+        "${DX_BIN_FILES}"
+        "DX"
+        "zip"
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DX_BUILD_VER1}/dxc_${DX_BUILD_VER2}.zip"
+)
+
+
+# === SPIRV_Cross Lib ( binary ) ===
+set(SPIRV_CROSS_FILES
+        "bin/spirv-cross-c-shared.dll"
+
+        "lib/spirv-cross-c-shared.lib"
+)
+set(SPIRV_CROSS_VER "2")
+
+get_bin_files(
+        "${SPIRV_CROSS_FILES}"
+        "spirv-cross"
+        "zip"
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "https://github.com/lololoh2004/spirv_bin/releases/download/${SPIRV_CROSS_VER}/win_x64.zip"
+)
+
+
+# === SDL3 Family Lib ( binary ) ===
+set(SDL3_BIN_FILES
+    "SDL3-x64/bin/SDL3.dll"
+    "SDL3-x64/bin/SDL3_shadercross.dll"
+
+    "SDL3-x64/lib/SDL3.lib"
+    "SDL3-x64/lib/SDL3_shadercross.lib"
+)
+set(SDL3_BUILD_VER "2026-10-25")
+get_bin_files(
+        "${SDL3_BIN_FILES}"
+        "SDL3"
+        "zip"
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+        "https://github.com/mmozeiko/build-sdl3/releases/download/${SDL3_BUILD_VER}/SDL3-x64-${SDL3_BUILD_VER}.zip"
+)
+
+
+# === SDL3 ===
+get_sdl3_repo()
+
+add_library(SDL3_lib SHARED IMPORTED)
+set_target_properties(SDL3_lib PROPERTIES
+        IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/SDL3.dll"
+        IMPORTED_IMPLIB   "${CMAKE_CURRENT_SOURCE_DIR}/SDL3.lib"
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl3/include"
+)
+
+
+# === SDL3 ShaderCross ===
+get_sdl3_sc_repo()
+
+add_library(SDL3_shadercross_lib SHARED IMPORTED)
+set_target_properties(SDL3_shadercross_lib PROPERTIES
+        IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/SDL3_shadercross.dll"
+        IMPORTED_IMPLIB   "${CMAKE_CURRENT_SOURCE_DIR}/SDL3_shadercross.lib"
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl3_sc/include"
+)
+
 
 # === LoUtils Lib ===
 add_subdirectory(lib/LoUtils)
@@ -37,8 +97,10 @@ set_target_properties(LolohUtilsPack_cxx PROPERTIES
         PREFIX ""
 )
 
-# === rSDL3 lib ===
+
+# === rSDL3 External Lib ===
 add_subdirectory(lib/rsdl)
+
 
 # === MSWLua Wrapper ===
 set(NO_DL_COPY ON CACHE BOOL "" FORCE)
@@ -46,22 +108,7 @@ add_subdirectory(lib/MSWLua)
 
 
 # === PhysFS ===
-set(PHYSFS_ARCHIVE_7Z      OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_GRP     OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_HOG     OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_MVL     OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_QPAK    OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_WAD     OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_SLB     OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_ISO9660 OFF CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_VDF     OFF CACHE BOOL "" FORCE)
-
-set(PHYSFS_ARCHIVE_ZIP     ON  CACHE BOOL "" FORCE)
-set(PHYSFS_ARCHIVE_TAR     ON  CACHE BOOL "" FORCE)
-
-set(PHYSFS_BUILD_TEST      OFF CACHE BOOL "" FORCE)
-set(PHYSFS_BUILD_SHARED    OFF CACHE BOOL "" FORCE)
-
+include(cmake/flags_physfs.cmake)
 add_subdirectory(lib/physfs)
 
 
@@ -78,43 +125,37 @@ add_executable(VEng2
         include/veng/cfg/arg_parser.hpp
         src/cfg/arg_parser.cpp
 
-        include/veng/virtual_file_sys/vfs_class.h
+        include/veng/virtual_file_sys/class.h
         src/virtual_file_sys/base.cpp
 
         include/veng/scene/ent_manager.hpp
         src/scene/ent_manager.cpp
 
         # Render section
-
+        src/render/rsdl/base.cpp
+        src/render/rsdl/draw.cpp
         # Lua section
 
         # UNSORTED section
-        src/render/rsdl_backnd/base.cpp
-        src/render/rsdl_backnd/draw.cpp
-        include/veng/render/rsdl_backnd.hpp
+        # include/veng/render/rsdl.hpp
         include/veng/script/lua_backnd.hpp
         src/script/lua_backnd/apiInit_func.cpp
         src/script/lua_backnd/base.cpp
-
+        include/veng/term.hpp
+        src/term/print.cpp
 )
 target_include_directories(VEng2 PUBLIC
         include
         lib/LoUtils/include
         lib/MSWLua/include
+        lib/sdl3/include
+        lib/rsdl/include
 )
 target_link_libraries(VEng2 PRIVATE
         LolohUtilsPack_cxx
         MSWLua_lib
-        rsdl
         physfs-static
-)
-
-
-# Custom CMDS.
-add_custom_command(TARGET VEng2 POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E echo "Deploying all engine bins. from shred-binary repo (VengBinary).."
-
-        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
-        "${BINS_SOURCE_DIR}"
-        "$<TARGET_FILE_DIR:VEng2>"
+        rsdl
+        SDL3_lib
+        SDL3_shadercross_lib
 )

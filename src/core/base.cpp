@@ -2,7 +2,7 @@
 
 #include <lo_utils/cxx_wrap/term.hpp>
 
-#include "veng/virtual_file_sys/vfs_class.h"
+#include "veng/virtual_file_sys/class.h"
 #include "veng/render/rsdl_backnd.hpp"
 #include "veng/scene/ent_manager.hpp"
 #include "veng/script/lua_backnd.hpp"
@@ -36,6 +36,7 @@ bool vEngine::initAll(int argc, char *argv[]){
     m_vFileSys ->init(argv[0]);
 
     // Render init
+    term::msg("Enter render init..", "ENG", COLOR_GRAY);
     m_render = std::make_unique<rSDLRender>();
     m_render ->init();
 

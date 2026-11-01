@@ -1,5 +1,4 @@
 #pragma once
-#include "rsdl/common/structs.h"
 
 
 class rSDLRender{
@@ -17,7 +16,7 @@ public:
     void shutdown();
 
     void clearBG() const;
-    void clearBG(color clr);
+    // void clearBG(color clr);
 
     void beginDraw();
     void endDraw();
