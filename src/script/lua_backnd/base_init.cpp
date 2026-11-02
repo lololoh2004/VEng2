@@ -5,7 +5,7 @@
 #include "mswlua/c_api/openLib_funcs.hpp"
 
 
-void luaScriptSys::shutdown(){
+void luaScriptSys::shutdown() const{
     closeLuaState(m_L);
 }
 

@@ -1,6 +1,6 @@
 cmake-build-*/
 CMakeCache.txt
-user_build/
+resources/.user_build/
 
 lib/
 

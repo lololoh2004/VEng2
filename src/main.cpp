@@ -1,4 +1,4 @@
-#include "veng/core/engine.hpp"
+#include "../include/veng/engine.hpp"
 
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL_main.h>

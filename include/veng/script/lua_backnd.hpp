@@ -12,5 +12,5 @@ public:
     bool baseInit();
     void apiInit();
 
-    void shutdown();
+    void shutdown() const;
 };

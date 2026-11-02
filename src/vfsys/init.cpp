@@ -1,4 +1,4 @@
-#include "veng/virtual_file_sys/class.h"
+#include "../../include/veng/vfsys.h"
 #include <physfs.h>
 
 #include "lo_utils/cxx_wrap/term.hpp"

@@ -1,40 +1,90 @@
 set(PROJECT_LIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib")
-set(GITHUB_URL "https://github.com/")
+set(GITHUB_URL "https://github.com")
 
 
-set(SDL3_REPO_URL "${GITHUB_URL}/libsdl-org/SDL")
-set(SDL3_REPO_PATH "${PROJECT_LIB_PATH}/sdl3")
+function(enternal_get_lib_repo name url path)
+    if(NOT EXISTS "${path}")
 
-set(SDL3_SC_REPO_URL "${GITHUB_URL}/libsdl-org/SDL_shadercross")
-set(SDL3_SC_REPO_PATH "${PROJECT_LIB_PATH}/sdl3_sc")
-
-
-function(get_sdl3_repo)
-    if(NOT EXISTS "${SDL3_REPO_PATH}/include")
-
-        message("[CMAKE] : SDL3 repository not found. Cloning...")
+        message("[CMAKE] : ${name} repository not found. Cloning...")
         execute_process(
-                COMMAND git clone --depth 1 "${SDL3_REPO_URL}" "${SDL3_REPO_PATH}"
+                COMMAND git clone --depth 1 "${url}" "${path}"
         )
 
     else()
 
-        message("[CMAKE] : SDL3 repository found")
+        message("[CMAKE] : ${name} repository found")
 
     endif()
 endfunction()
 
+
+set(SDL3_REPO_URL  "${GITHUB_URL}/libsdl-org/SDL")
+set(SDL3_REPO_PATH "${PROJECT_LIB_PATH}/sdl3")
+
+function(get_sdl3_repo)
+    enternal_get_lib_repo(
+        SDL3
+        ${SDL3_REPO_URL}
+        ${SDL3_REPO_PATH}
+    )
+endfunction()
+
+
+set(SDL3_SC_REPO_URL  "${GITHUB_URL}/libsdl-org/SDL_shadercross")
+set(SDL3_SC_REPO_PATH "${PROJECT_LIB_PATH}/sdl3_sc")
+
 function(get_sdl3_sc_repo)
-    if(NOT EXISTS "${SDL3_SC_REPO_PATH}/include")
+    enternal_get_lib_repo(
+        SDL3_ShaderCross
+        ${SDL3_SC_REPO_URL}
+        ${SDL3_SC_REPO_PATH}
+    )
+endfunction()
 
-        message("[CMAKE] : SDL3 ShaderCross repository not found. Cloning...")
-        execute_process(
-                COMMAND git clone --depth 1 "${SDL3_SC_REPO_URL}" "${SDL3_SC_REPO_PATH}"
-        )
 
-    else()
+set(CGLM_REPO_URL  "${GITHUB_URL}/recp/cglm")
+set(CGLM_REPO_PATH "${PROJECT_LIB_PATH}/cglm")
 
-        message("[CMAKE] : SDL3 ShaderCross repository found")
+function(get_cglm_repo)
+    enternal_get_lib_repo(
+        cGLM
+        ${CGLM_REPO_URL}
+        ${CGLM_REPO_PATH}
+    )
+endfunction()
 
-    endif()
+
+set(LOUTILS_REPO_URL  "${GITHUB_URL}/lololoh2004/LolohUtilsPack")
+set(LOUTILS_REPO_PATH "${PROJECT_LIB_PATH}/LoUtils")
+
+function(get_lo_utils_repo)
+    enternal_get_lib_repo(
+            LoUtils
+            ${LOUTILS_REPO_URL}
+            ${LOUTILS_REPO_PATH}
+    )
+endfunction()
+
+
+set(MSWLUA_REPO_URL  "${GITHUB_URL}/lololoh2004/MSWLua")
+set(MSWLUA_REPO_PATH "${PROJECT_LIB_PATH}/MSWLua")
+
+function(get_mswlua_repo)
+    enternal_get_lib_repo(
+            MSWLua
+            ${MSWLUA_REPO_URL}
+            ${MSWLUA_REPO_PATH}
+    )
+endfunction()
+
+
+set(PHYSFS_REPO_URL  "${GITHUB_URL}/icculus/physfs")
+set(PHYSFS_REPO_PATH "${PROJECT_LIB_PATH}/physfs")
+
+function(get_physfs_repo)
+    enternal_get_lib_repo(
+            PhysFS
+            ${PHYSFS_REPO_URL}
+            ${PHYSFS_REPO_PATH}
+    )
 endfunction()

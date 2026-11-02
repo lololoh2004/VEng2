@@ -85,29 +85,32 @@ set_target_properties(SDL3_shadercross_lib PROPERTIES
 )
 
 
+# === cGLM ===
+get_cglm_repo()
+
+
 # === LoUtils Lib ===
+get_lo_utils_repo()
 add_subdirectory(lib/LoUtils)
 
-set_target_properties(LolohUtilsPack PROPERTIES
-        OUTPUT_NAME "lo_utils"
-        PREFIX ""
-)
-set_target_properties(LolohUtilsPack_cxx PROPERTIES
-        OUTPUT_NAME "lo_utils_cxx"
-        PREFIX ""
-)
-
-
-# === rSDL3 External Lib ===
-add_subdirectory(lib/rsdl)
+#set_target_properties(LolohUtilsPack PROPERTIES
+#        OUTPUT_NAME "lo_utils"
+#        PREFIX ""
+#)
+#set_target_properties(LolohUtilsPack_cxx PROPERTIES
+#        OUTPUT_NAME "lo_utils_cxx"
+#        PREFIX ""
+#)
 
 
 # === MSWLua Wrapper ===
+get_mswlua_repo()
 set(NO_DL_COPY ON CACHE BOOL "" FORCE)
 add_subdirectory(lib/MSWLua)
 
 
 # === PhysFS ===
+get_physfs_repo()
 include(cmake/flags_physfs.cmake)
 add_subdirectory(lib/physfs)
 
@@ -118,44 +121,51 @@ add_executable(VEng2
 
         # Core section
         src/main.cpp
-        include/veng/core/engine.hpp
-        src/core/base.cpp
-        src/core/update.cpp
+        include/veng/engine.hpp
+        src/engine/init.cpp
+        src/engine/update.cpp
 
-        include/veng/cfg/arg_parser.hpp
-        src/cfg/arg_parser.cpp
+        include/veng/utils/arg_parser.hpp
+        src/utils/arg_parser.cpp
 
-        include/veng/virtual_file_sys/class.h
-        src/virtual_file_sys/base.cpp
+        include/veng/vfsys.h
+        src/vfsys/init.cpp
 
         include/veng/scene/ent_manager.hpp
         src/scene/ent_manager.cpp
 
         # Render section
-        src/render/rsdl/base.cpp
-        src/render/rsdl/draw.cpp
         # Lua section
 
         # UNSORTED section
-        # include/veng/render/rsdl.hpp
         include/veng/script/lua_backnd.hpp
-        src/script/lua_backnd/apiInit_func.cpp
-        src/script/lua_backnd/base.cpp
+        src/script/lua_backnd/api_init.cpp
+        src/script/lua_backnd/base_init.cpp
         include/veng/term.hpp
         src/term/print.cpp
+        src/input/keyboard.cpp
+        src/input/mouse.cpp
+        include/veng/input.hpp
+        src/window/sdl_backnd/init.cpp
+        src/render/rsdl_backnd/init.cpp
+        src/render/rsdl_backnd/draw.cpp
+        include/veng/window/sdl_backnd.hpp
+        include/veng/common/structs.hpp
+        src/render/rsdl_backnd/load_shader.cpp
+        src/window/sdl_backnd/events.cpp
+        src/window/sdl_backnd/time.cpp
 )
 target_include_directories(VEng2 PUBLIC
         include
         lib/LoUtils/include
         lib/MSWLua/include
         lib/sdl3/include
-        lib/rsdl/include
+        lib/cglm/include
 )
 target_link_libraries(VEng2 PRIVATE
         LolohUtilsPack_cxx
         MSWLua_lib
         physfs-static
-        rsdl
         SDL3_lib
         SDL3_shadercross_lib
 )
