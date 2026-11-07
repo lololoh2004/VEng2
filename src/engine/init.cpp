@@ -1,14 +1,13 @@
 #include "veng/engine.hpp"
 
-#include <lo_utils/cxx_wrap/term.hpp>
-
 #include "veng/vfsys.h"
 #include "veng/window/sdl_backnd.hpp"
 #include "veng/render/rsdl_backnd.hpp"
 #include "veng/scene/ent_manager.hpp"
 #include "veng/script/lua_backnd.hpp"
+#include "veng/term.hpp"
 
-#include "veng/utils/arg_parser.hpp"
+#include "veng/common/color_presets.h"
 
 
 vEngine::~vEngine(){
@@ -17,23 +16,25 @@ vEngine::~vEngine(){
 vEngine::vEngine() = default;
 
 
-void vEngine::initModules(char* firstArg){
+void vEngine::initModules(){
     // Lua init
-    m_scriptSys = std::make_unique<luaScriptSys>();
+    m_term->log("Enter script backend init.. ( wont provide a success log )", "ENG", CLR_GRAY);
+    m_scriptSys =  std::make_unique<luaScriptSys>();
+    m_scriptSys -> baseInit();
 
     // VFSys
-    term::msg("Enter vfsys init..", "ENG", COLOR_GRAY);
+    m_term->log("Enter vfsys init..", "ENG", CLR_GRAY);
     m_vFileSys =  std::make_unique<VFileSys>();
-    m_vFileSys -> init(firstArg);
+    m_vFileSys -> init(getArg(ENGINE_ARG, "exe_path").data());
 
     // Window init
-    term::msg("Enter window init..", "ENG", COLOR_GRAY);
+    m_term->log("Enter window init..", "ENG", CLR_GRAY);
     m_window =  std::make_unique<SDLWindow>();
     m_window -> initWindow();
     m_window -> setMaxFPS(80);
 
     // Render init
-    term::msg("Enter render init..", "ENG", COLOR_GRAY);
+    m_term->log("Enter render init..", "ENG", CLR_GRAY);
     m_render =  std::make_unique<rSDLRender>(m_window->getRawWindow());
     m_render -> initRender();
 
@@ -42,22 +43,21 @@ void vEngine::initModules(char* firstArg){
 }
 
 bool vEngine::initAll(int argc, char *argv[]){
-    // Small setup
-    term::setup();
-    term::msg("Enter engine init..", "ENG", COLOR_GRAY);
+    // Arg process
+    _processArgs(argc, argv);
 
-    // Getting custom args
-    cmdArgParser cmdArg(argc, argv);
-    std::string bPrintName = "autorun";
-    cmdArg.fillVar(bPrintName, "bp_print", argTypeEng);
-    term::msg(bPrintName, "ENG", COLOR_CYAN);
+    // Small term setup
+    m_term =  std::make_unique<termSys>();
+    m_term -> log("Enter engine init..", "ENG", CLR_GRAY);
 
-    initModules(argv[0]);
+    initModules();
+
+
 
     return true;
 }
 
 void vEngine::shutdownAll(){
     // Nah
-    term::msg("Bye", "ENG", COLOR_GRAY);
+    m_term->log("Bye", "ENG", CLR_GRAY);
 }

@@ -1,18 +1,18 @@
 #include "veng/script/lua_backnd.hpp"
 
-#include "lo_utils/common/defines.h"
 #include "mswlua/c_api/init.hpp"
 #include "mswlua/c_api/openLib_funcs.hpp"
 
 
-void luaScriptSys::shutdown() const{
+void luaBaseState::close(){
     closeLuaState(m_L);
+    m_L = nullptr;
 }
 
-bool luaScriptSys::baseInit(){
+bool luaBaseState::init(){
     m_L = getLuaState();
-    if (m_L == nullptr) return RETURN_FAILURE;
+    if (m_L == nullptr) return false;
 
     openLibs(m_L);
-    return RETURN_SUCCESS;
+    return true;
 }

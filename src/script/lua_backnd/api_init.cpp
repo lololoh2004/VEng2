@@ -10,6 +10,8 @@
 void luaScriptSys::apiInit(){
     std::string result;
 
+    // ONLY for server side for now
+    // Sorry
     structBuilder structBuilder;
     structBuilder
         .createStruct("vec3")
@@ -32,5 +34,5 @@ void luaScriptSys::apiInit(){
         structBuilder.getBindContent(), funcBuilder.getBindContent()
     );
 
-    doScriptStr(m_L, apiBridge);
+    m_states[SV_State].doStr(apiBridge);
 }

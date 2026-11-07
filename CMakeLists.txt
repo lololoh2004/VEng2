@@ -89,6 +89,33 @@ set_target_properties(SDL3_shadercross_lib PROPERTIES
 get_cglm_repo()
 
 
+# === ImGui ===
+get_imgui_repo()
+#get_cimgui_repo()
+
+#set(CIMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/cimgui")
+set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui")
+
+set(IMGUI_ALL_SOURCES
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_demo.cpp
+
+        ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
+)
+
+add_library(ImGuiBind STATIC ${IMGUI_ALL_SOURCES})
+
+target_include_directories(ImGuiBind PUBLIC
+        ${IMGUI_DIR}
+        ${IMGUI_DIR}/backends
+)
+
+target_link_libraries(ImGuiBind PRIVATE SDL3_lib)
+
+
 # === LoUtils Lib ===
 get_lo_utils_repo()
 add_subdirectory(lib/LoUtils)
@@ -125,9 +152,6 @@ add_executable(VEng2
         src/engine/init.cpp
         src/engine/update.cpp
 
-        include/veng/utils/arg_parser.hpp
-        src/utils/arg_parser.cpp
-
         include/veng/vfsys.h
         src/vfsys/init.cpp
 
@@ -154,13 +178,20 @@ add_executable(VEng2
         src/render/rsdl_backnd/load_shader.cpp
         src/window/sdl_backnd/events.cpp
         src/window/sdl_backnd/time.cpp
+        src/script/lua_backnd/do.cpp
+        src/term/constructor.cpp
+        src/engine/args.cpp
 )
 target_include_directories(VEng2 PUBLIC
         include
+        lib/
         lib/LoUtils/include
         lib/MSWLua/include
         lib/sdl3/include
         lib/cglm/include
+        lib/imgui
+        lib/imgui/backends
+        lib/cimgui
 )
 target_link_libraries(VEng2 PRIVATE
         LolohUtilsPack_cxx
@@ -168,4 +199,5 @@ target_link_libraries(VEng2 PRIVATE
         physfs-static
         SDL3_lib
         SDL3_shadercross_lib
+        ImGuiBind
 )

@@ -4,15 +4,18 @@
 #include <thread>
 #include <string>
 
+#include "common/structs.hpp"
+
 
 class termSys{
     std::vector<std::string> m_logQueue;
     std::jthread m_logThread;
 public:
-    termSys()  = default;
+    termSys();
     ~termSys() = default;
 
-    void log(std::string msg);
+    // [[deprecated]]
+    void log(std::string_view content, const char* entryPoint, colRGBA color);
 
     void clear(bool deleteWin32Folder = false);
 };
