@@ -17,6 +17,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv){
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
     auto* veng = static_cast<vEngine*>(appstate);
 
+    veng->updateEvent(event);
     if (event->type == SDL_EVENT_QUIT) {
         return SDL_APP_SUCCESS;
     }
@@ -27,7 +28,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
 SDL_AppResult SDL_AppIterate(void *appstate) {
     auto* veng = static_cast<vEngine*>(appstate);
 
-    veng->update();
+    veng->updateFrame();
 
     return SDL_APP_CONTINUE;
 }

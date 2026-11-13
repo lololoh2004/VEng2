@@ -22,7 +22,7 @@ class luaBaseState{
     lua_State* m_L = nullptr;
 public:
     bool init();
-    void doStr(std::string_view content);
+    // void doStr(std::string_view content);
 
     void reboot() { close(); init(); }
     void close();
@@ -45,6 +45,8 @@ public:
         }
     }
     void apiInit();
+
+    bool runBPrint();
 
     void shutdown(unsigned int states){
         if (states & SV_State) m_states[SV_State_Idx].close();

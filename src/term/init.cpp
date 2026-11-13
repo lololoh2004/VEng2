@@ -2,12 +2,11 @@
 
 #ifdef _WIN32
     #include <windows.h>
-    #include <io.h>
 #endif
 
 
 
-termSys::termSys(){
+void termInit(){
 #ifdef _WIN32
     printf("[TERM] Enter terminal init..\n - Your term : ");
     if (getenv("WT_SESSION") != NULL) {
@@ -25,6 +24,5 @@ termSys::termSys(){
     if (!SetConsoleMode(hOut, dwMode)) return;
 
     printf("\033[1;32mWindows Legacy CMD\033[0m\n");
-    return;
 #endif
 }

@@ -1,7 +1,7 @@
 #include "veng/script/lua_backnd.hpp"
 
-#include "mswlua/c_api/init.hpp"
-#include "mswlua/c_api/openLib_funcs.hpp"
+#include "mswlua/c_api/lua_state_wrap.hpp"
+#include "mswlua/c_api/open_libs.hpp"
 
 
 void luaBaseState::close(){

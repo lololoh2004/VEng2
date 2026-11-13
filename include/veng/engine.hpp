@@ -6,10 +6,12 @@
 
 class rSDLRender;
 class entityManager;
-class VFileSys;
+class fileSys;
 class luaScriptSys;
-class SDLWindow;
 class termSys;
+
+class SDLWindow;
+union SDL_Event;
 
 enum argType{
     ENGINE_ARG,
@@ -22,8 +24,8 @@ struct argContainer{
 
 
 class vEngine{
-    std::unique_ptr<termSys>       m_term;
-    std::unique_ptr<VFileSys>      m_vFileSys;
+    // std::unique_ptr<termSys>       m_term;
+    std::unique_ptr<fileSys>       m_vFileSys;
     std::unique_ptr<luaScriptSys>  m_scriptSys;
     std::unique_ptr<SDLWindow>     m_window;
     std::unique_ptr<rSDLRender>    m_render;
@@ -46,7 +48,8 @@ public:
     [[nodiscard]] bool hasArg(argType type, std::string_view name) const;
     [[nodiscard]] std::string_view getArg(argType type, std::string_view name) const;
 
-    void update();
+    void updateFrame();
+    void updateEvent(const SDL_Event* event);
     void shutdownAll();
 
     // void DEBUG_FUNC1();

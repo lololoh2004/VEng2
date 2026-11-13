@@ -3,7 +3,7 @@
 #include "veng/common/structs.hpp"
 
 
-void termSys::log(std::string_view content, const char* entryPoint, colRGBA color){
+void log(std::string_view content, const char* entryPoint, colRGBA color){
     printf("\033[38;2;%d;%d;%dm[%s] %.*s\n",
         color.r, color.g, color.b,
         entryPoint,

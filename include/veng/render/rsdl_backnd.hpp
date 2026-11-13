@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SDL3/SDL_gpu.h"
+#include <imgui_impl_sdlgpu3.h>
 #include "veng/common/structs.hpp"
 
 
@@ -9,37 +9,40 @@ struct SDL_Window;
 struct SDL_GPUCommandBuffer;
 struct SDL_GPUTexture;
 struct SDL_GPUShader;
+union  SDL_Event;
 
 
-typedef enum rsdlShaderStage {
-    RSDL_SHADERSTAGE_VERTEX,
-    RSDL_SHADERSTAGE_FRAGMENT
-} rsdlShaderStage;
-
-typedef enum rsdlShaderFormat{
-    RSDL_SHADERFORMAT_HLSL_TXT,
-    RSDL_SHADERFORMAT_SPIRV,
-    RSDL_SHADERFORMAT_DXIL,
-} rsdlShaderFormat;
-
-typedef struct shaderFileInfo{
-    bool isValid;
-    rsdlShaderFormat format;
-    size_t size;
-    char* content;
-} shaderFileInfo;
-
-typedef struct SDLShaderWrapper {
-    shaderFileInfo fileInfo;
-    SDL_GPUShader* sdlShader;
-    rsdlShaderStage stage;
-} SDLShaderWrapper;
+// typedef enum rsdlShaderStage {
+//     RSDL_SHADERSTAGE_VERTEX,
+//     RSDL_SHADERSTAGE_FRAGMENT
+// } rsdlShaderStage;
+//
+// typedef enum rsdlShaderFormat{
+//     RSDL_SHADERFORMAT_HLSL_TXT,
+//     RSDL_SHADERFORMAT_SPIRV,
+//     RSDL_SHADERFORMAT_DXIL,
+// } rsdlShaderFormat;
+//
+// typedef struct shaderFileInfo{
+//     bool isValid;
+//     rsdlShaderFormat format;
+//     size_t size;
+//     char* content;
+// } shaderFileInfo;
+//
+// typedef struct SDLShaderWrapper {
+//     shaderFileInfo fileInfo;
+//     SDL_GPUShader* sdlShader;
+//     rsdlShaderStage stage;
+// } SDLShaderWrapper;
 
 
 class rSDLRender{
     SDL_GPUCommandBuffer* m_cmdBuffer  = nullptr;
     SDL_GPUTexture* m_swapchainTexture = nullptr;
     SDL_GPURenderPass* m_renderPass    = nullptr;
+
+    ImGui_ImplSDLGPU3_InitInfo m_igInitInfo;
 
     SDL_GPUDevice*  m_gpuDevice = nullptr;
     SDL_Window*     m_window    = nullptr;
@@ -57,10 +60,20 @@ public:
     void beginDraw();
     void endDraw();
 
-    // void clearBG() const;
-
-    void setBgColor(colRGBA color);
+    void setBgColor(colRGBA color) { m_bgColor = color; }
 
     // SDL_GPUShader* compileShaderStr(const char* codeStr, size_t inSize, rsdlShaderFormat inFormat, rsdlShaderStage inStage);
     void destroyShader(SDL_GPUShader* shader);
+
+
+    bool initIGUI();
+
+    void updateIGUIEvents(const SDL_Event* rawEvent);
+
+    void beginIGUI();
+    void endIGUI();
+    void showDemoIGUI();
+
+
+    void submitGPUBuf();
 };

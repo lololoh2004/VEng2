@@ -104,6 +104,7 @@ set(IMGUI_ALL_SOURCES
         ${IMGUI_DIR}/imgui_demo.cpp
 
         ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_sdlgpu3.cpp
 )
 
 add_library(ImGuiBind STATIC ${IMGUI_ALL_SOURCES})
@@ -152,8 +153,8 @@ add_executable(VEng2
         src/engine/init.cpp
         src/engine/update.cpp
 
-        include/veng/vfsys.h
-        src/vfsys/init.cpp
+        include/veng/file_sys.h
+        src/file_sys/physfs/init.cpp
 
         include/veng/scene/ent_manager.hpp
         src/scene/ent_manager.cpp
@@ -178,9 +179,11 @@ add_executable(VEng2
         src/render/rsdl_backnd/load_shader.cpp
         src/window/sdl_backnd/events.cpp
         src/window/sdl_backnd/time.cpp
-        src/script/lua_backnd/do.cpp
-        src/term/constructor.cpp
+        src/term/init.cpp
         src/engine/args.cpp
+        src/file_sys/sdl/get_cur_path.cpp
+        src/render/rsdl_backnd/ig/init.cpp
+        src/render/rsdl_backnd/ig/draw.cpp
 )
 target_include_directories(VEng2 PUBLIC
         include
@@ -191,7 +194,6 @@ target_include_directories(VEng2 PUBLIC
         lib/cglm/include
         lib/imgui
         lib/imgui/backends
-        lib/cimgui
 )
 target_link_libraries(VEng2 PRIVATE
         LolohUtilsPack_cxx

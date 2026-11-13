@@ -1,10 +1,10 @@
-#include <format>
-
-#include "mswlua/c_api/doScript_funcs.hpp"
 #include "veng/script/lua_backnd.hpp"
 
+#include "mswlua/c_api/run_str_script.hpp"
 #include "mswlua/ffi/build_func_cdef.hpp"
 #include "mswlua/ffi/build_struct_cdef.hpp"
+
+#include <format>
 
 
 void luaScriptSys::apiInit(){
@@ -24,7 +24,7 @@ void luaScriptSys::apiInit(){
     funcBuilder
     .commitAll();
 
-    std::string apiBridge = std::format(
+    std::string svApiBridge = std::format(
         "local ffi = require(\"ffi\")\n"
         "ffi.cdef [[\n"
         "{}\n{}\n"
@@ -34,5 +34,6 @@ void luaScriptSys::apiInit(){
         structBuilder.getBindContent(), funcBuilder.getBindContent()
     );
 
-    m_states[SV_State].doStr(apiBridge);
+    // m_states[SV_State].doStr(apiBridge);
+    strScript(m_states[SV_State].getRaw(), svApiBridge).runScript();
 }

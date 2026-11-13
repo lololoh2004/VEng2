@@ -34,6 +34,7 @@ public:
     // Events
     const SDL_Event* getRawEvents();
     void updateEvents();
+    const void* pollRawEvent();
 
     // Time
     void updateTime();

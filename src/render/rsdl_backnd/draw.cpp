@@ -7,6 +7,8 @@ void draw();
 
 void rSDLRender::beginDraw(){
     m_cmdBuffer = SDL_AcquireGPUCommandBuffer(m_gpuDevice);
+    if (m_cmdBuffer == nullptr) return;
+
     m_swapchainTexture = nullptr;
     if (!SDL_WaitAndAcquireGPUSwapchainTexture(
         m_cmdBuffer, m_window, &m_swapchainTexture,
@@ -15,10 +17,6 @@ void rSDLRender::beginDraw(){
         //nah
     }
     draw();
-}
-
-void rSDLRender::setBgColor(colRGBA bgColor){
-    m_bgColor = bgColor;
 }
 
 void rSDLRender::draw(){
@@ -39,7 +37,7 @@ void rSDLRender::draw(){
     };
 
     m_renderPass = SDL_BeginGPURenderPass(
-        m_cmdBuffer, &clrTargetInfo, 1, NULL);
+        m_cmdBuffer, &clrTargetInfo, 1, nullptr);
 }
 
 void rSDLRender::endDraw(){
@@ -47,5 +45,12 @@ void rSDLRender::endDraw(){
         SDL_EndGPURenderPass(m_renderPass);
         m_renderPass = nullptr;
     }
-    SDL_SubmitGPUCommandBuffer(m_cmdBuffer);
+}
+
+void rSDLRender::submitGPUBuf(){
+    if (m_cmdBuffer) {
+        SDL_SubmitGPUCommandBuffer(m_cmdBuffer);
+        m_cmdBuffer = nullptr;
+        m_swapchainTexture = nullptr;
+    }
 }
