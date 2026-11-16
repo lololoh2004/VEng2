@@ -15,7 +15,7 @@ bool rSDLRender::initIGUI(){
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui_ImplSDL3_InitForSDLGPU(m_window);
-    m_igInitInfo = {
+    ImGui_ImplSDLGPU3_InitInfo m_igInitInfo = {
         .Device = m_gpuDevice,
         .ColorTargetFormat = SDL_GetGPUSwapchainTextureFormat(m_gpuDevice, m_window),
         .MSAASamples = SDL_GPU_SAMPLECOUNT_1,

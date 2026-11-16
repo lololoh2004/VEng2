@@ -1,6 +1,5 @@
 #pragma once
 
-#include <imgui_impl_sdlgpu3.h>
 #include "veng/common/structs.hpp"
 
 
@@ -9,6 +8,7 @@ struct SDL_Window;
 struct SDL_GPUCommandBuffer;
 struct SDL_GPUTexture;
 struct SDL_GPUShader;
+struct SDL_GPURenderPass;
 union  SDL_Event;
 
 
@@ -41,8 +41,6 @@ class rSDLRender{
     SDL_GPUCommandBuffer* m_cmdBuffer  = nullptr;
     SDL_GPUTexture* m_swapchainTexture = nullptr;
     SDL_GPURenderPass* m_renderPass    = nullptr;
-
-    ImGui_ImplSDLGPU3_InitInfo m_igInitInfo;
 
     SDL_GPUDevice*  m_gpuDevice = nullptr;
     SDL_Window*     m_window    = nullptr;
