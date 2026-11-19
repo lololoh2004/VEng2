@@ -1,4 +1,4 @@
-#include "veng/render/rsdl_backnd.hpp"
+#include "veng/render/rsdl.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_sdl3.h>
@@ -12,7 +12,7 @@ bool rSDLRender::initIGUI(){
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui_ImplSDL3_InitForSDLGPU(m_window);
     ImGui_ImplSDLGPU3_InitInfo m_igInitInfo = {

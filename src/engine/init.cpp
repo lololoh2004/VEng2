@@ -3,14 +3,17 @@
 
 // Veng module headers
 #include "veng/file_sys.h"
-#include "veng/window/sdl_backnd.hpp"
-#include "veng/render/rsdl_backnd.hpp"
+#include "veng/window/sdl.hpp"
+#include "veng/render/rsdl.hpp"
 #include "veng/scene/ent_manager.hpp"
-#include "veng/script/lua_backnd.hpp"
+#include "veng/script/lua_jit.hpp"
 #include "veng/term.hpp"
 
 // Small QoL
 #include "veng/common/color_presets.h"
+
+// MSWLua
+#include <mswlua/c_api/run_str_script.hpp>
 
 
 vEngine::~vEngine(){
@@ -20,22 +23,23 @@ vEngine::vEngine() = default;
 
 
 void vEngine::initModules(){
-    // Lua init
-    log("Enter script backend init.. ( wont provide a success log )", "ENG", CLR_YELLOW);
-    m_scriptSys =  std::make_unique<luaScriptSys>();
-    m_scriptSys -> baseInit();
-
     // VFSys
     log("Enter vfsys init..", "ENG", CLR_GRAY);
-    m_vFileSys =  std::make_unique<fileSys>();
-    m_vFileSys -> vfsysInit(getArg(ENGINE_ARG, "exe_path").data());
-    m_vFileSys -> mountBase(getArg(ENGINE_ARG, "bp_print"));
+    m_fileSys =  std::make_unique<fileSys>();
+    m_fileSys -> vInit(getArg(ENGINE_ARG, "exe_path").data());
+    m_fileSys -> vMountBase(getArg(ENGINE_ARG, "bp_print"));
+
+    // Lua init
+    log("Enter script backend init..", "ENG", CLR_GRAY);
+    m_scriptSys = std::make_unique<luaScriptSys>();
+    m_scriptSys -> initAPI();
+    strScript(m_scriptSys->sv, "print('[LUA] : Lua SV state init. successfully ( raw print() )')").runScript();
 
     // Window init
     log("Enter window init..", "ENG", CLR_GRAY);
     m_window =  std::make_unique<SDLWindow>();
     m_window -> initWindow();
-    m_window -> setMaxFPS(80);
+    m_window -> setMaxFPS(0);
 
     // Render init
     log("Enter render init..", "ENG", CLR_GRAY);
@@ -46,6 +50,7 @@ void vEngine::initModules(){
     // Scene sys. init
     m_entManager = std::make_unique<entityManager>();
 }
+
 
 bool vEngine::initAll(int argc, char *argv[]){
     // Arg process

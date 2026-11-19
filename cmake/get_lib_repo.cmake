@@ -90,32 +90,37 @@ function(get_physfs_repo)
 endfunction()
 
 
-#set(CIMGUI_REPO_URL  "${GITHUB_URL}/cimgui/cimgui")
-#set(CIMGUI_REPO_PATH "${PROJECT_LIB_PATH}/cimgui")
-#
-#function(get_cimgui_repo)
-#    internal_get_lib_repo(
-#        cImGui
-#        ${CIMGUI_REPO_URL}
-#        ${CIMGUI_REPO_PATH}
-#    )
-#endfunction()
-
-
+set(CIMGUI_REPO_URL  "${GITHUB_URL}/cimgui/cimgui")
+set(CIMGUI_REPO_PATH "${PROJECT_LIB_PATH}/cimgui")
 set(IMGUI_REPO_URL  "${GITHUB_URL}/ocornut/imgui")
-set(IMGUI_REPO_PATH "${PROJECT_LIB_PATH}/imgui")
+#set(IMGUI_REPO_PATH "${PROJECT_LIB_PATH}/imgui")
+set(IMGUI_REPO_PATH "${CIMGUI_REPO_PATH}/imgui")
 
-function(get_imgui_repo)
-    if(NOT EXISTS "${IMGUI_REPO_PATH}")
+function(get_cimgui_repo)
+    if(NOT EXISTS "${CIMGUI_REPO_PATH}")
 
-        message("[CMAKE] : ImGUI repository not found. Cloning...")
+        message("[CMAKE] : cImGUI repository not found. Cloning...")
         execute_process(
-                COMMAND git clone --branch docking --depth 1 "${IMGUI_REPO_URL}" "${IMGUI_REPO_PATH}"
+                COMMAND git clone --branch docking_inter --recursive "${CIMGUI_REPO_URL}" "${CIMGUI_REPO_PATH}"
         )
 
     else()
 
-        message("[CMAKE] : ImGUI repository found")
+        message("[CMAKE] : cImGUI repository found")
 
     endif()
 endfunction()
+#function(get_imgui_repo)
+#    if(NOT EXISTS "${IMGUI_REPO_PATH}")
+#
+#        message("[CMAKE] : ImGUI repository not found. Cloning...")
+#        execute_process(
+#                COMMAND git clone --branch docking --depth 1 "${IMGUI_REPO_URL}" "${IMGUI_REPO_PATH}"
+#        )
+#
+#    else()
+#
+#        message("[CMAKE] : ImGUI repository found")
+#
+#    endif()
+#endfunction()

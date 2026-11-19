@@ -90,13 +90,16 @@ get_cglm_repo()
 
 
 # === ImGui ===
-get_imgui_repo()
-#get_cimgui_repo()
+#get_imgui_repo()
+get_cimgui_repo()
 
-#set(CIMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/cimgui")
-set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui")
+set(CIMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/cimgui")
+#set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui")
+set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 
 set(IMGUI_ALL_SOURCES
+        ${CIMGUI_DIR}/cimgui.cpp
+
         ${IMGUI_DIR}/imgui.cpp
         ${IMGUI_DIR}/imgui_draw.cpp
         ${IMGUI_DIR}/imgui_widgets.cpp
@@ -110,25 +113,17 @@ set(IMGUI_ALL_SOURCES
 add_library(ImGuiBind STATIC ${IMGUI_ALL_SOURCES})
 
 target_include_directories(ImGuiBind PUBLIC
+        ${CIMGUI_DIR}
         ${IMGUI_DIR}
         ${IMGUI_DIR}/backends
 )
+if(WIN32)
+    target_compile_definitions(ImGuiBind PUBLIC "IMGUI_API=__declspec(dllexport)")
+else()
+    target_compile_definitions(ImGuiBind PUBLIC "IMGUI_API=__attribute__((visibility(\"default\")))")
+endif()
 
 target_link_libraries(ImGuiBind PRIVATE SDL3_lib)
-
-
-# === LoUtils Lib ===
-get_lo_utils_repo()
-add_subdirectory(lib/LoUtils)
-
-#set_target_properties(LolohUtilsPack PROPERTIES
-#        OUTPUT_NAME "lo_utils"
-#        PREFIX ""
-#)
-#set_target_properties(LolohUtilsPack_cxx PROPERTIES
-#        OUTPUT_NAME "lo_utils_cxx"
-#        PREFIX ""
-#)
 
 
 # === MSWLua Wrapper ===
@@ -149,41 +144,53 @@ add_executable(VEng2
 
         # Core section
         src/main.cpp
+
+        include/veng/common/structs.hpp
+
         include/veng/engine.hpp
+        src/engine/args.cpp
         src/engine/init.cpp
         src/engine/update.cpp
 
+        include/veng/term.hpp
+        src/term/init.cpp
+        src/term/print.cpp
+
         include/veng/file_sys.h
         src/file_sys/physfs/init.cpp
+        src/file_sys/sdl/get_cur_path.cpp
 
         include/veng/scene/ent_manager.hpp
         src/scene/ent_manager.cpp
 
-        # Render section
-        # Lua section
+        # Window section ( SDL3 backnd )
+        include/veng/window/sdl.hpp
+        src/window/sdl/init.cpp
+        src/window/sdl/events.cpp
+        src/window/sdl/time.cpp
 
-        # UNSORTED section
-        include/veng/script/lua_backnd.hpp
-        src/script/lua_backnd/api_init.cpp
-        src/script/lua_backnd/base_init.cpp
-        include/veng/term.hpp
-        src/term/print.cpp
+        # Render section ( RSDL backnd / SDL3 GPU backnd)
+        src/render/rsdl/init.cpp
+        src/render/rsdl/draw.cpp
+        src/render/rsdl/load_shader.cpp
+
+        src/render/rsdl/ig/init.cpp
+        src/render/rsdl/ig/draw.cpp
+
+        # Input section ( SDL3 backnd )
+        include/veng/input.hpp
         src/input/keyboard.cpp
         src/input/mouse.cpp
-        include/veng/input.hpp
-        src/window/sdl_backnd/init.cpp
-        src/render/rsdl_backnd/init.cpp
-        src/render/rsdl_backnd/draw.cpp
-        include/veng/window/sdl_backnd.hpp
-        include/veng/common/structs.hpp
-        src/render/rsdl_backnd/load_shader.cpp
-        src/window/sdl_backnd/events.cpp
-        src/window/sdl_backnd/time.cpp
-        src/term/init.cpp
-        src/engine/args.cpp
-        src/file_sys/sdl/get_cur_path.cpp
-        src/render/rsdl_backnd/ig/init.cpp
-        src/render/rsdl_backnd/ig/draw.cpp
+
+        # Lua section
+        include/veng/script/lua_jit.hpp
+        src/script/lua_jit/state_base.cpp
+        src/script/lua_jit/api_init.cpp
+        src/file_sys/physfs/read_smth.cpp
+
+        # UNSORTED section
+
+
 )
 target_include_directories(VEng2 PUBLIC
         include
@@ -196,10 +203,18 @@ target_include_directories(VEng2 PUBLIC
         lib/imgui/backends
 )
 target_link_libraries(VEng2 PRIVATE
-        LolohUtilsPack_cxx
         MSWLua_lib
         physfs-static
         SDL3_lib
         SDL3_shadercross_lib
-        ImGuiBind
+#        ImGuiBind
 )
+if(WIN32)
+    target_link_libraries(VEng2 PRIVATE ImGuiBind)
+else()
+    target_link_libraries(VEng2 PRIVATE
+            -Wl,--whole-archive
+            ImGuiBind
+            -Wl,--no-whole-archive
+    )
+endif()

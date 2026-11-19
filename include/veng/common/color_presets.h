@@ -1,6 +1,8 @@
 #pragma once
 
 
+#define TERM_WHITE      "\033[38;2;204;204;204m"
+
 #define CLR_DARKGRAY    (colRGBA){ 33 , 37 , 41 , 255 }
 #define CLR_WHITE       (colRGBA){ 245, 245, 245, 255 }
 #define CLR_RED         (colRGBA){ 230, 41 , 55 , 255 }

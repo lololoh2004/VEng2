@@ -4,7 +4,7 @@
 #include <string>
 
 
-std::string fileSys::getExePath(){
+std::string fileSys::nGetExePath(){
     const char* path = SDL_GetBasePath();
     if (path == nullptr) return "";
     return path;

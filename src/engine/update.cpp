@@ -1,8 +1,8 @@
 #include "veng/engine.hpp"
 
 #include "veng/common/color_presets.h"
-#include "veng/window/sdl_backnd.hpp"
-#include "veng/render/rsdl_backnd.hpp"
+#include "veng/window/sdl.hpp"
+#include "veng/render/rsdl.hpp"
 
 
 void vEngine::updateEvent(const SDL_Event* event){

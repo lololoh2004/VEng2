@@ -4,14 +4,14 @@
 #include <vector>
 
 
-class rSDLRender;
-class entityManager;
-class fileSys;
-class luaScriptSys;
-class termSys;
+class  rSDLRender;
+class  entityManager;
+class  fileSys;
+struct luaScriptSys;
+class  termSys;
 
-class SDLWindow;
-union SDL_Event;
+class  SDLWindow;
+union  SDL_Event;
 
 enum argType{
     ENGINE_ARG,
@@ -25,7 +25,7 @@ struct argContainer{
 
 class vEngine{
     // std::unique_ptr<termSys>       m_term;
-    std::unique_ptr<fileSys>       m_vFileSys;
+    std::unique_ptr<fileSys>       m_fileSys;
     std::unique_ptr<luaScriptSys>  m_scriptSys;
     std::unique_ptr<SDLWindow>     m_window;
     std::unique_ptr<rSDLRender>    m_render;
